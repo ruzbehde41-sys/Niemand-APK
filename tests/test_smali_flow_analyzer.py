@@ -64,7 +64,7 @@ class SmaliFlowAnalyzerTests(unittest.TestCase):
             file.write_text(
                 '.class public Lcom/example/Secret;\n'
                 '.method public value()V\n'
-                ' const-string v0, "access_token=abc123secret"\n'
+                ' const-string v0, "Gateway access_token=abc123secret"\n'
                 ".end method\n"
             )
             data = self.run_tool(file)
