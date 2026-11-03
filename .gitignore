@@ -1,0 +1,41 @@
+# Android / Gradle
+.gradle/
+**/build/
+local.properties
+*.iml
+.idea/
+.cxx/
+.externalNativeBuild/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.odex
+*.vdex
+*.art
+# Signing material and secrets
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+# Node
+node_modules/
+# Editors / OS
+.DS_Store
+Thumbs.db
+*.swp
+# Large generated analysis output
+decompiled/
+extracted/
+outputs/
+artifacts/
