@@ -50,3 +50,20 @@ python -m unittest discover -s tests -v
 \`\`\`
 
 The analyzer does not execute Smali, access the network, extract APKs or follow symbolic-link inputs. Findings are heuristic: obfuscation, reflection, dynamically assembled strings and APIs outside the selected namespaces can cause missed findings; pattern matches can also be false positives. Only \`const-string\` instructions are sampled, not every literal in the source. Output is JSON and capped per category per file (200 by default); directory scans are capped at 10,000 files.
+
+
+## Smali call-flow analysis
+
+- \`scripts/smali_flow_analyzer.py\`: read-only, heuristic extraction of method declarations, invoke call edges, selected network-library calls, URL endpoints and protocol/event-like string literals.
+- \`tests/test_smali_flow_analyzer.py\`: synthetic tests for call attribution, network namespaces, URL/protocol literals, redaction, limits and package filtering.
+
+Examples:
+
+\`\`\`sh
+python scripts/smali_flow_analyzer.py /path/to/smali --max-files 500
+python scripts/smali_flow_analyzer.py /path/to/smali --package-prefix com.example --max-files 300
+python scripts/smali_flow_analyzer.py /path/to/Example.smali --max-items 100
+python -m unittest discover -s tests -v
+\`\`\`
+
+The analyzer reads text only; it does not execute code, access the network, extract APKs or follow symbolic-link inputs. Call edges are limited to explicit Smali \`invoke-*\` instructions inside parsed method blocks. Network namespaces are a curated list, not an exhaustive API catalogue. URL and protocol-string matches are heuristic and can miss dynamically assembled, encrypted, obfuscated or otherwise indirect values. Token-like key/value literals are redacted, but this is not a general-purpose secret scanner. Directory scans default to at most 500 files; output findings are capped per category per file (300 by default). Use a narrow package or directory scope first.
