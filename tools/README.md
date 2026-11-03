@@ -67,3 +67,20 @@ python -m unittest discover -s tests -v
 \`\`\`
 
 The analyzer reads text only; it does not execute code, access the network, extract APKs or follow symbolic-link inputs. Call edges are limited to explicit Smali \`invoke-*\` instructions inside parsed method blocks. Network namespaces are a curated list, not an exhaustive API catalogue. URL and protocol-string matches are heuristic and can miss dynamically assembled, encrypted, obfuscated or otherwise indirect values. Token-like key/value literals are redacted, but this is not a general-purpose secret scanner. Directory scans default to at most 500 files; output findings are capped per category per file (300 by default). Use a narrow package or directory scope first.
+
+
+## Smali protocol event-flow report
+
+- \`scripts/smali_event_flow.py\`: builds a redacted, read-only mapping from explicit \`GatewayClientEvent.*\` / \`GatewayServerEvent.*\` string identifiers to their containing Smali methods, with same-method invoke-call context and heuristic event categories.
+- \`tests/test_smali_event_flow.py\`: synthetic tests for client/server direction, event categorization, related calls, redaction, package filtering and output limits.
+
+Run from the repository root:
+
+\`\`\`sh
+python scripts/smali_event_flow.py /path/to/smali --max-files 200 --max-items 100
+python scripts/smali_event_flow.py /path/to/chat/websocket --package-prefix ai.x.grok.chat.websocket
+python -m unittest tests.test_smali_event_flow -v
+python -m unittest discover -s tests -v
+\`\`\`
+
+The report only identifies event names explicitly present in captured \`const-string\` protocol literals. Related calls are local to the containing method; this is not a runtime trace or complete cross-class call graph. It does not decode serialized payloads, inspect credentials, execute code, access the network or modify APK files. Results are heuristic and bounded by the configured file/finding limits.
